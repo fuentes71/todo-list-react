@@ -33,7 +33,7 @@ export const AppThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         height="100vh"
         bgcolor={theme.palette.background.default}
       >
-        <Button onClick={toggleTheme}>
+        <Button style={{ position: "absolute" }} onClick={toggleTheme}>
           {themeName === "Light" ? <DarkModeIcon /> : <LightModeIcon />}
         </Button>
         {children}
