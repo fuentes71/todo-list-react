@@ -1,3 +1,5 @@
+import React from "react";
+import { ErrorContext, ErrorProvider } from "../shared/contexts/ErrorContext";
 import {
   FormControl,
   Input,
@@ -6,80 +8,117 @@ import {
   InputLabel,
   Box,
   Paper,
-  ButtonGroup,
   Button,
   IconButton,
-  ButtonBase,
-  ToggleButton,
-  StepButton,
-  StepLabel,
+  InputAdornment,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import React from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { AuthContext } from "../shared/contexts/AuthContext";
 
 export const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [isVisibility, setIsVisibility] = React.useState(false);
-
-  function handleSubmit(e: { preventDefault: () => void }, data: string) {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useContext(ErrorContext);
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(data);
-  }
-  console.log(email);
+
+    try {
+      setLoading(true);
+      //   login();
+    } catch (error) {
+      setError("E-mail ou Senha Inválido.");
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   return (
-    <Container maxWidth={false} sx={{ width: "100%", height: "100%" }}>
+    <Container maxWidth="sm">
       <Grid
-        sx={{ width: "100%", height: "100%" }}
         container
+        height="100vh"
         justifyContent="center"
         alignItems="center"
       >
-        <Box padding="20px" alignItems="center" justifyContent="center">
-          <form>
-            <Paper style={{ padding: "50px 20px" }}>
-              <Grid margin=" 0 2vw 5vh 2vw">
-                <FormControl>
-                  <InputLabel itemRef="email">E-mail</InputLabel>
-                  <Input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid margin="5vh 2vw 0 2vw">
-                <FormControl>
-                  <InputLabel itemRef="password">Password</InputLabel>
-                  <Input
-                    type={isVisibility === true ? "text" : "password"}
-                    id="password"
-                    style={{ position: "relative" }}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <IconButton
-                    style={{ position: "absolute", top: "25%", right: "0" }}
-                    onClick={() => setIsVisibility(!isVisibility)}
+        <Box
+          onSubmit={handleSubmit}
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "25ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <Paper style={{ padding: "10px" }}>
+            {error && (
+              <Box>
+                <Grid textAlign="center" style={{ color: "red" }}>
+                  {error}
+                </Grid>
+              </Box>
+            )}
+            <Grid>
+              <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
+                <InputLabel htmlFor="email">E-mail</InputLabel>
+                <Input
+                  error={error != null ? true : false}
+                  disabled={loading}
+                  type="email"
+                  id="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid>
+              <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  disabled={loading}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                  endAdornment={
+                    <InputAdornment
+                      disablePointerEvents={loading}
+                      position="end"
+                    >
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => setShowPassword(!showPassword)}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Grid>
+            <Grid>
+              <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
+                {loading ? (
+                  <LoadingButton
+                    loading
+                    loadingIndicator="Conectando..."
+                    variant="outlined"
                   >
-                    {isVisibility === true ? (
-                      <VisibilityOffIcon />
-                    ) : (
-                      <VisibilityIcon />
-                    )}
-                  </IconButton>
-                </FormControl>
-              </Grid>
-              <Grid display="flex" justifyContent="center" marginTop="5vh">
-                <FormControl>
-                  <Button type="submit">Entrar</Button>
-                </FormControl>
-              </Grid>
-            </Paper>
-          </form>
+                    Fetch data
+                  </LoadingButton>
+                ) : (
+                  <Button type="submit">Conectar</Button>
+                )}
+              </FormControl>
+            </Grid>
+          </Paper>
         </Box>
       </Grid>
     </Container>
