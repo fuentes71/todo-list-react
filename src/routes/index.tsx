@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Login, TodoList } from "../pages";
-import { AuthContext, AuthProvider } from "../shared/contexts/AuthContext";
+import { AuthContext } from "../shared/contexts/AuthContext";
 
 export const AppRoutes = () => {
   const { isAuthenticated } = React.useContext(AuthContext);

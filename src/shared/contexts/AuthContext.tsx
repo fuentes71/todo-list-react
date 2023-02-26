@@ -1,4 +1,5 @@
 import React from "react";
+import { UseLocalStorage } from "../hooks";
 
 interface IAuthContext {
   isAuthenticated: boolean;

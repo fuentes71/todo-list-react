@@ -1,5 +1,5 @@
-import React from "react";
-import { ErrorContext, ErrorProvider } from "../shared/contexts/ErrorContext";
+import React, { Dispatch, SetStateAction } from "react";
+
 import {
   FormControl,
   Input,
@@ -14,31 +14,24 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { AuthContext } from "../shared/contexts/AuthContext";
+import { UseLocalStorage } from "../../shared/hooks";
 
 export const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [data, setData] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useContext(ErrorContext);
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      setLoading(true);
-      //   login();
-    } catch (error) {
-      setError("E-mail ou Senha Inválido.");
-    }
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    console.log(UseLocalStorage("email", email));
   };
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
   };
 
   return (
@@ -70,8 +63,8 @@ export const Login = () => {
               <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
                 <InputLabel htmlFor="email">E-mail</InputLabel>
                 <Input
-                  error={error != null ? true : false}
                   disabled={loading}
+                  error={error === null ? false : true}
                   type="email"
                   id="email"
                   onChange={(e) => setEmail(e.target.value)}
@@ -83,6 +76,7 @@ export const Login = () => {
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
                   disabled={loading}
+                  error={error === null ? false : true}
                   id="password"
                   type={showPassword ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
@@ -110,9 +104,7 @@ export const Login = () => {
                     loading
                     loadingIndicator="Conectando..."
                     variant="outlined"
-                  >
-                    Fetch data
-                  </LoadingButton>
+                  ></LoadingButton>
                 ) : (
                   <Button type="submit">Conectar</Button>
                 )}
