@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 import {
   FormControl,
@@ -14,24 +14,28 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { UseLocalStorage } from "../../shared/hooks";
+import { AuthContext } from "../../shared/contexts/AuthContext";
 
 export const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [data, setData] = React.useState(false);
+
   const [showPassword, setShowPassword] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const { login, error, loading, isAuthenticated } =
+    React.useContext(AuthContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // window.localStorage.setItem(
+    //   "data",
+    //   JSON.stringify([
+    //     { email: "teste", password: "123" },
+    //     { email: "matheus@gmail.com", password: "123" },
+    //   ])
+    // );
 
-    console.log(UseLocalStorage("email", email));
-  };
-
-  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    login(email, password);
+    // eslint-disable-next-line no-const-assign
   };
 
   return (
@@ -88,7 +92,6 @@ export const Login = () => {
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={() => setShowPassword(!showPassword)}
-                        onMouseDown={handleMouseDownPassword}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>

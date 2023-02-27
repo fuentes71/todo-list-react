@@ -1,11 +1,16 @@
-const UseLocalStorage = (key: any, state: any) => {
+export const UseGetLocalStorage = (key: string, state: any) => {
   //@ts-ignore
-  let storage = JSON.parse(localStorage.getItem(key));
+  const storage = JSON.parse(localStorage.getItem(key));
 
-  storage.forEach((el: any) => {
-    if (el === state) return true;
-  });
-  return false;
+  return storage ? storage : state;
 };
 
-export default UseLocalStorage;
+export const UseSetLocalStorage = (key: string, state: any) => {
+  const json = JSON.stringify(state);
+  const response = window.localStorage.setItem(key, json);
+  return response;
+};
+
+export const UseRemoveLocalStorage = (key: string) => {
+  localStorage.removeItem(key);
+};

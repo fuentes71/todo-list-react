@@ -1,2 +1,6 @@
-import UseLocalStorage from "./UseLocalStorage";
-export { UseLocalStorage };
+import {
+  UseGetLocalStorage,
+  UseSetLocalStorage,
+  UseRemoveLocalStorage,
+} from "./UseLocalStorage";
+export { UseGetLocalStorage, UseSetLocalStorage, UseRemoveLocalStorage };
