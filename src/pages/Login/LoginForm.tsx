@@ -1,5 +1,6 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../shared/contexts/AuthContext";
 import {
   FormControl,
   Input,
@@ -14,28 +15,17 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { AuthContext } from "../../shared/contexts/AuthContext";
 
-export const Login = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+export const LoginForm = () => {
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
 
   const [showPassword, setShowPassword] = React.useState(false);
-  const { login, error, loading, isAuthenticated } =
-    React.useContext(AuthContext);
+  const { login, error, loading } = React.useContext(AuthContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // window.localStorage.setItem(
-    //   "data",
-    //   JSON.stringify([
-    //     { email: "teste", password: "123" },
-    //     { email: "matheus@gmail.com", password: "123" },
-    //   ])
-    // );
-
     login(email, password);
-    // eslint-disable-next-line no-const-assign
   };
 
   return (
@@ -71,7 +61,7 @@ export const Login = () => {
                   error={error === null ? false : true}
                   type="email"
                   id="email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={({ target }) => setEmail(target.value)}
                 />
               </FormControl>
             </Grid>
@@ -83,7 +73,7 @@ export const Login = () => {
                   error={error === null ? false : true}
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={({ target }) => setPassword(target.value)}
                   endAdornment={
                     <InputAdornment
                       disablePointerEvents={loading}
@@ -111,6 +101,14 @@ export const Login = () => {
                 ) : (
                   <Button type="submit">Conectar</Button>
                 )}
+              </FormControl>
+            </Grid>
+            <Grid>
+              <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
+                <p>
+                  Não possui conta?
+                  <Link to="/singup">Cadastre-se Aqui!</Link>
+                </p>
               </FormControl>
             </Grid>
           </Paper>

@@ -1,7 +1,6 @@
 import React from "react";
-import Button from "@mui/material/Button";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Login, TodoList } from "../pages";
+import { LoginForm, LoginCreate, TodoList } from "../pages";
 import { AuthContext } from "../shared/contexts/AuthContext";
 
 export const AppRoutes = () => {
@@ -17,16 +16,9 @@ export const AppRoutes = () => {
         </>
       ) : (
         <>
-          <Route path="/Login" element={<Login />} />
-          <Route
-            path="/Cadastro"
-            element={
-              <Button variant="contained" color="secondary">
-                pag inicial
-              </Button>
-            }
-          />
-          <Route path="*" element={<Navigate to="/Login" />} />
+          <Route path="/singin" element={<LoginForm />} />
+          <Route path="/singup" element={<LoginCreate />} />
+          <Route path="*" element={<Navigate to="/singin" />} />
         </>
       )}
     </Routes>
