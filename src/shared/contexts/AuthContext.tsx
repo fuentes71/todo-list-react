@@ -4,12 +4,18 @@ import {
   UseRemoveLocalStorage,
   UseSetLocalStorage,
 } from "../../shared/hooks";
-interface IAuthContext {
+interface AuthContextProps {
   isAuthenticated: boolean;
   loading: boolean;
-  error: string | null;
+  error: boolean;
   data: string[];
-  login: (email: string, password: string) => void;
+  singIn: (email: string, password: string) => void;
+  singUp: (
+    email: string,
+    password: string,
+    repeatPassword: string,
+    name: string
+  ) => void;
   logout: () => void;
 }
 type User = {
@@ -18,23 +24,27 @@ type User = {
   password: string;
   todo: string[];
 };
-export const AuthContext = React.createContext<IAuthContext>(
-  {} as IAuthContext
+export const AuthContext = React.createContext<AuthContextProps>(
+  {} as AuthContextProps
 );
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const data = UseGetLocalStorage("data", []);
+  const data =
+    UseGetLocalStorage("data") === null ? [] : UseGetLocalStorage("data");
   const [isAuthenticated, setIsAuthenticated] = React.useState(() => {
-    const isAuthenticated = UseGetLocalStorage("isAuthenticated", false);
+    const isAuthenticated =
+      UseGetLocalStorage("isAuthenticated") === null
+        ? false
+        : UseGetLocalStorage("isAuthenticated");
     if (isAuthenticated) {
       return isAuthenticated;
     }
     return false;
   });
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
   const [user, setUser] = React.useState<User[]>();
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -44,11 +54,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated]);
 
-  const login = (email: string, password: string) => {
+  const singIn = (email: string, password: string) => {
     setLoading(true);
     setTimeout(() => {
       if (!data) {
-        setError("Não foi possível carregar os dados de usuários");
+        // <SnackbarAlert
+        //   severity="error"
+        //   message="Não foi possível carregar os dados de usuários"
+        //   open={true}
+        // />;
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      if (!email || !password) {
+        // <SnackbarAlert
+        //   severity="error"
+        //   message="Preencha todos os campos!"
+        //   open={true}
+        // />;
+        setError(true);
         setLoading(false);
         return;
       }
@@ -58,7 +84,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       if (filteredData.length === 0) {
-        setError("E-mail ou senha incorretos!");
+        // <SnackbarAlert
+        //   severity="error"
+        //   message="E-mail ou senha incorretos!"
+        //   open={true}
+        // />;
+        setError(true);
       } else {
         const users: User[] = filteredData.map((el: User) => ({
           name: el.name,
@@ -66,12 +97,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           todo: el.todo,
         }));
         setUser(users);
-        setError(null);
+        setError(false);
         setIsAuthenticated(true);
       }
       setLoading(false);
     }, 1000);
   };
+
+  const singUp = (
+    name: string,
+    email: string,
+    password: string,
+    repeatPassword: string
+  ) => {
+    data.push({ name: name, email: email, password: password, todo: [] });
+    console.log(data);
+  };
+
   const logout = () => {
     console.log(user);
 
@@ -80,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, data, error, loading }}
+      value={{ isAuthenticated, singIn, singUp, logout, data, error, loading }}
     >
       {children}
     </AuthContext.Provider>

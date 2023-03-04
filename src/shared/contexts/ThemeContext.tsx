@@ -3,12 +3,12 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import React from "react";
 import { DarkThemer, LightTheme } from "../thermes";
-interface IThemeContextData {
+interface ThemeContextDataProps {
   themeName: "Light" | "Dark";
   toggleTheme: () => void;
 }
 const ThemeContext = () => {
-  React.createContext({} as IThemeContextData);
+  React.createContext({} as ThemeContextDataProps);
 };
 export const AppThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
