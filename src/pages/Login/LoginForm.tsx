@@ -1,7 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../../shared/contexts/AuthContext";
-import { ButtonSubmit, InputPassword, InputSimple, Form } from "../components";
+import {
+  ButtonSubmit,
+  InputPassword,
+  InputSimple,
+  Form,
+  NavButton,
+} from "../components";
 
 type AuthProps = {
   email: string;
@@ -9,6 +14,8 @@ type AuthProps = {
 };
 
 export const LoginForm: React.FC = () => {
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+
   const [auth] = React.useState<AuthProps>({
     email: "",
     password: "",
@@ -18,10 +25,24 @@ export const LoginForm: React.FC = () => {
     id === "email" ? (auth.email = value) : (auth.password = value);
   };
 
-  const { singIn } = React.useContext(AuthContext);
+  const { singIn, error } = React.useContext(AuthContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+
+    if (!auth.email) {
+      newErrors.email = "Campo Obrigatório";
+    }
+    if (!auth.password) {
+      newErrors.password = "Campo Obrigatório";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     singIn(auth.email, auth.password);
   };
 
@@ -31,11 +52,15 @@ export const LoginForm: React.FC = () => {
         <InputSimple
           label={"E-mail"}
           id={"email"}
+          error={Boolean(errors.email)}
+          helperText={errors.email}
           onChange={handleInputChange}
         />
         <InputPassword
-          label={"Password"}
+          label={"Senha"}
           id={"password"}
+          error={Boolean(errors.password)}
+          helperText={errors.password}
           onChange={handleInputChange}
         />
         <ButtonSubmit
@@ -45,9 +70,9 @@ export const LoginForm: React.FC = () => {
         >
           Conectar
         </ButtonSubmit>
-        <button>
-          <Link to={"/singup"}>cadastrar</Link>
-        </button>
+        <NavButton to="/singup">
+          Não possui conta? Cadastre-se agora!!
+        </NavButton>
       </Form>
     </React.Fragment>
   );

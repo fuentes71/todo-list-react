@@ -13,6 +13,7 @@ import {
   Box,
   OutlinedInput,
 } from "@mui/material";
+import GridForm from "../Form/GridForm";
 
 interface InputProps {
   label: string;
@@ -38,32 +39,30 @@ const InputPassword: React.FC<InputProps> = ({
 
   return (
     <>
-      <Grid>
-        <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
-          <TextField
-            variant="standard"
-            disabled={loading}
-            error={error}
-            type={showPassword ? "text" : "password"}
-            id={id}
-            helperText={helperText}
-            onChange={handleChange}
-            label={label}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment disablePointerEvents={loading} position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </FormControl>
-      </Grid>
+      <GridForm>
+        <TextField
+          variant="standard"
+          disabled={loading}
+          error={error}
+          type={showPassword ? "text" : "password"}
+          id={id}
+          helperText={helperText}
+          onChange={handleChange}
+          label={label}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment disablePointerEvents={loading} position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </GridForm>
     </>
   );
 };

@@ -1,7 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../shared/contexts/AuthContext";
-import { ButtonSubmit, InputPassword, InputSimple, Form } from "../components";
+import {
+  ButtonSubmit,
+  InputPassword,
+  InputSimple,
+  Form,
+  GridForm,
+  NavButton,
+} from "../components";
 
 type AuthProps = {
   name: string;
@@ -23,6 +30,7 @@ export const LoginCreate: React.FC = () => {
 
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const fullNameRegex = /^[a-zA-Z]+(?:\s[a-zA-Z]+)+$/;
 
   const handleInputChange = (id: string, value: string) => {
     switch (id) {
@@ -57,8 +65,13 @@ export const LoginCreate: React.FC = () => {
     if (auth.password != auth.repeatPassword) {
       newErrors.repeatPassword = "As senhas precisam ser iguais";
     }
+
     if (!auth.repeatPassword) {
       newErrors.repeatPassword = "Campo Obrigatório";
+    }
+
+    if (fullNameRegex.test(auth.name)) {
+      newErrors.name = "Insira o nome completo";
     }
 
     if (!emailRegex.test(auth.email)) {
@@ -74,12 +87,12 @@ export const LoginCreate: React.FC = () => {
       setErrors(newErrors);
       return;
     }
-    // singUp(auth.name, auth.email, auth.password, auth.repeatPassword);
-    console.log(newErrors);
+
+    singUp(auth.name, auth.email, auth.password);
   };
 
   return (
-    <React.Fragment>
+    <>
       <Form maxWidth="md">
         <InputSimple
           label={"Nome Completo"}
@@ -96,14 +109,14 @@ export const LoginCreate: React.FC = () => {
           onChange={handleInputChange}
         />
         <InputPassword
-          label={"Password"}
+          label={"Senha"}
           id={"password"}
           error={Boolean(errors.password)}
           helperText={errors.password}
           onChange={handleInputChange}
         />
         <InputPassword
-          label={"Repeat Password"}
+          label={"Confirme a senha"}
           id={"repeatPassword"}
           error={Boolean(errors.repeatPassword)}
           helperText={errors.repeatPassword}
@@ -114,12 +127,10 @@ export const LoginCreate: React.FC = () => {
           loadingIndicator={"Loading..."}
           onClick={handleSubmit}
         >
-          Criando
+          Cadastrar
         </ButtonSubmit>
-        <button>
-          <Link to={"/singup"}>cadastrar</Link>
-        </button>
+        <NavButton to="/singin">Já possui conta? Faça o login!</NavButton>
       </Form>
-    </React.Fragment>
+    </>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControl, Input, Grid, InputLabel, TextField } from "@mui/material";
 import { AuthContext } from "../../../shared/contexts/AuthContext";
+import GridForm from "../Form/GridForm";
 
 interface InputProps {
   label: string;
@@ -26,22 +27,20 @@ const InputSimple: React.FC<InputProps> = ({
   };
 
   return (
-    <React.Fragment>
-      <Grid>
-        <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
-          <TextField
-            variant="standard"
-            label={label}
-            disabled={loading}
-            error={error}
-            type={id}
-            id={id}
-            helperText={helperText}
-            onChange={handleChange}
-          />
-        </FormControl>
-      </Grid>
-    </React.Fragment>
+    <>
+      <GridForm>
+        <TextField
+          variant="standard"
+          label={label}
+          disabled={loading}
+          error={error}
+          type={id}
+          id={id}
+          helperText={helperText}
+          onChange={handleChange}
+        />
+      </GridForm>
+    </>
   );
 };
 

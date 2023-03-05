@@ -1,4 +1,5 @@
 import React from "react";
+import { Navigate } from "react-router-dom";
 import {
   UseGetLocalStorage,
   UseRemoveLocalStorage,
@@ -10,12 +11,7 @@ interface AuthContextProps {
   error: boolean;
   data: string[];
   singIn: (email: string, password: string) => void;
-  singUp: (
-    email: string,
-    password: string,
-    repeatPassword: string,
-    name: string
-  ) => void;
+  singUp: (email: string, password: string, name: string) => void;
   logout: () => void;
 }
 type User = {
@@ -54,69 +50,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isAuthenticated]);
 
-  const singIn = (email: string, password: string) => {
+  const singIn = (email: string, password: string): void => {
     setLoading(true);
     setTimeout(() => {
-      if (!data) {
-        // <SnackbarAlert
-        //   severity="error"
-        //   message="Não foi possível carregar os dados de usuários"
-        //   open={true}
-        // />;
-        setError(true);
-        setLoading(false);
-        return;
-      }
-
-      if (!email || !password) {
-        // <SnackbarAlert
-        //   severity="error"
-        //   message="Preencha todos os campos!"
-        //   open={true}
-        // />;
-        setError(true);
-        setLoading(false);
-        return;
-      }
-
       const filteredData = data.filter(
         (el: User) => el.email === email && el.password === password
       );
 
       if (filteredData.length === 0) {
-        // <SnackbarAlert
-        //   severity="error"
-        //   message="E-mail ou senha incorretos!"
-        //   open={true}
-        // />;
         setError(true);
-      } else {
-        const users: User[] = filteredData.map((el: User) => ({
-          name: el.name,
-          email: el.email,
-          todo: el.todo,
-        }));
-        setUser(users);
-        setError(false);
-        setIsAuthenticated(true);
+        setLoading(false);
+        return;
       }
+      const users: User[] = filteredData.map((el: User) => ({
+        name: el.name,
+        email: el.email,
+        todo: el.todo,
+      }));
+      setUser(users);
+      setError(false);
       setLoading(false);
+      setIsAuthenticated(true);
+      return;
     }, 1000);
   };
 
-  const singUp = (
-    name: string,
-    email: string,
-    password: string,
-    repeatPassword: string
-  ) => {
-    data.push({ name: name, email: email, password: password, todo: [] });
-    console.log(data);
+  const singUp = (name: string, email: string, password: string) => {
+    setLoading(true);
+    setTimeout(() => {
+      const validate = data.some((el: { email: string }) => el.email === email);
+      if (validate) {
+        console.log("email ja cadastrado");
+        console.log(data);
+        setLoading(false);
+
+        return;
+      }
+
+      data.push({ name: name, email: email, password: password, todo: [] });
+      UseSetLocalStorage("data", data);
+      setLoading(false);
+      console.log("usuario cadastrado", data);
+    }, 1000);
   };
 
   const logout = () => {
-    console.log(user);
-
     setIsAuthenticated(false);
   };
 

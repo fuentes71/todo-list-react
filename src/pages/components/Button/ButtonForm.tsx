@@ -2,6 +2,7 @@ import React from "react";
 import { FormControl, Grid, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { AuthContext } from "../../../shared/contexts/AuthContext";
+import GridForm from "../Form/GridForm";
 
 interface ButtonFormProps {
   type: "button" | "submit";
@@ -18,23 +19,21 @@ const ButtonSubmit: React.FC<ButtonFormProps> = ({
 }) => {
   const { loading } = React.useContext(AuthContext);
   return (
-    <React.Fragment>
-      <Grid>
-        <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
-          {loading ? (
-            <LoadingButton
-              loading
-              loadingIndicator={loadingIndicator}
-              variant="outlined"
-            ></LoadingButton>
-          ) : (
-            <Button onClick={onClick} type={type}>
-              {children}
-            </Button>
-          )}
-        </FormControl>
-      </Grid>
-    </React.Fragment>
+    <>
+      <GridForm>
+        {loading ? (
+          <LoadingButton
+            loading
+            loadingIndicator={loadingIndicator}
+            variant="outlined"
+          ></LoadingButton>
+        ) : (
+          <Button onClick={onClick} type={type}>
+            {children}
+          </Button>
+        )}
+      </GridForm>
+    </>
   );
 };
 
