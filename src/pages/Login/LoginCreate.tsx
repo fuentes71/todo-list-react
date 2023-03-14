@@ -1,32 +1,19 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import { AuthContext } from "../../shared/contexts/AuthContext";
-import {
-  ButtonSubmit,
-  InputPassword,
-  InputSimple,
-  Form,
-  GridForm,
-  NavButton,
-} from "../components";
-
-type AuthProps = {
-  name: string;
-  email: string;
-  password: string;
-  repeatPassword: string;
-};
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { AuthContext } from '../../shared/contexts/AuthContext';
+import { AlertToast } from '../../shared/contexts/SnackbarAlert';
+import { AuthCreateProps } from '../../shared/types';
+import { ButtonSubmit, InputPassword, InputSimple, Form, NavButton } from '../components';
 
 export const LoginCreate: React.FC = () => {
-  const { singUp } = React.useContext(AuthContext);
-  const [auth] = React.useState<AuthProps>({
-    name: "",
-    email: "",
-    password: "",
-    repeatPassword: "",
-  });
-
+  const { singUp, error } = React.useContext(AuthContext);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const [auth] = React.useState<AuthCreateProps>({
+    name: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
+  });
 
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
@@ -34,16 +21,16 @@ export const LoginCreate: React.FC = () => {
 
   const handleInputChange = (id: string, value: string) => {
     switch (id) {
-      case "email":
+      case 'email':
         auth.email = value;
         break;
-      case "name":
+      case 'name':
         auth.name = value;
         break;
-      case "password":
+      case 'password':
         auth.password = value;
         break;
-      case "repeatPassword":
+      case 'repeatPassword':
         auth.repeatPassword = value;
         break;
 
@@ -58,29 +45,29 @@ export const LoginCreate: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
 
     if (!auth.name) {
-      newErrors.name = "Campo Obrigatório";
+      newErrors.name = 'Campo Obrigatório';
     }
 
     // eslint-disable-next-line eqeqeq
     if (auth.password != auth.repeatPassword) {
-      newErrors.repeatPassword = "As senhas precisam ser iguais";
+      newErrors.repeatPassword = 'As senhas precisam ser iguais';
     }
 
     if (!auth.repeatPassword) {
-      newErrors.repeatPassword = "Campo Obrigatório";
+      newErrors.repeatPassword = 'Campo Obrigatório';
     }
 
     if (fullNameRegex.test(auth.name)) {
-      newErrors.name = "Insira o nome completo";
+      newErrors.name = 'Insira o nome completo';
     }
 
     if (!emailRegex.test(auth.email)) {
-      newErrors.email = "E-mail inválido";
+      newErrors.email = 'E-mail inválido';
     }
 
     if (!passwordRegex.test(auth.password)) {
       newErrors.password =
-        "A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um número";
+        'A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um número';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -93,43 +80,42 @@ export const LoginCreate: React.FC = () => {
 
   return (
     <>
-      <Form maxWidth="md">
+      <Form>
+        {/* {error && <AlertToast children="teste" severity="success"/>} */}
         <InputSimple
-          label={"Nome Completo"}
-          id={"name"}
+          label={'Nome Completo'}
+          id={'name'}
           error={Boolean(errors.name)}
           helperText={errors.name}
           onChange={handleInputChange}
         />
         <InputSimple
-          label={"E-mail"}
-          id={"email"}
+          label={'E-mail'}
+          id={'email'}
           error={Boolean(errors.email)}
           helperText={errors.email}
           onChange={handleInputChange}
         />
         <InputPassword
-          label={"Senha"}
-          id={"password"}
+          label={'Senha'}
+          id={'password'}
           error={Boolean(errors.password)}
           helperText={errors.password}
           onChange={handleInputChange}
         />
         <InputPassword
-          label={"Confirme a senha"}
-          id={"repeatPassword"}
+          label={'Confirme a senha'}
+          id={'repeatPassword'}
           error={Boolean(errors.repeatPassword)}
           helperText={errors.repeatPassword}
           onChange={handleInputChange}
         />
-        <ButtonSubmit
-          type={"submit"}
-          loadingIndicator={"Loading..."}
-          onClick={handleSubmit}
-        >
+        <ButtonSubmit loadingIndicator={'Loading...'} onClick={handleSubmit}>
           Cadastrar
         </ButtonSubmit>
-        <NavButton to="/singin">Já possui conta? Faça o login!</NavButton>
+        <NavButton link="Faça o login!" to="/singin">
+          Já possui conta?
+        </NavButton>
       </Form>
     </>
   );

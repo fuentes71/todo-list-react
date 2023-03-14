@@ -1,52 +1,29 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import {
-  UseGetLocalStorage,
-  UseRemoveLocalStorage,
-  UseSetLocalStorage,
-} from "../../shared/hooks";
-interface AuthContextProps {
-  isAuthenticated: boolean;
-  loading: boolean;
-  error: boolean;
-  data: string[];
-  singIn: (email: string, password: string) => void;
-  singUp: (email: string, password: string, name: string) => void;
-  logout: () => void;
-}
-type User = {
-  name: string;
-  email: string;
-  password: string;
-  todo: string[];
-};
-export const AuthContext = React.createContext<AuthContextProps>(
-  {} as AuthContextProps
-);
+import React from 'react';
+import { UseGetLocalStorage, UseRemoveLocalStorage, UseSetLocalStorage } from '../../shared/hooks';
+import { AuthContextProps, UserProps } from '../types';
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const data =
-    UseGetLocalStorage("data") === null ? [] : UseGetLocalStorage("data");
+export const AuthContext = React.createContext<AuthContextProps>({} as AuthContextProps);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const data = UseGetLocalStorage('data') === null ? [] : UseGetLocalStorage('data');
   const [isAuthenticated, setIsAuthenticated] = React.useState(() => {
     const isAuthenticated =
-      UseGetLocalStorage("isAuthenticated") === null
+      UseGetLocalStorage('isAuthenticated') === null
         ? false
-        : UseGetLocalStorage("isAuthenticated");
+        : UseGetLocalStorage('isAuthenticated');
     if (isAuthenticated) {
       return isAuthenticated;
     }
     return false;
   });
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<boolean>(false);
-  const [user, setUser] = React.useState<User[]>();
+  const [error, setError] = React.useState<string[] | false>(false);
+  const [user, setUser] = React.useState<UserProps[]>();
   React.useEffect(() => {
     if (isAuthenticated) {
-      UseSetLocalStorage("isAuthenticated", isAuthenticated);
+      UseSetLocalStorage('isAuthenticated', isAuthenticated);
     } else {
-      UseRemoveLocalStorage("isAuthenticated");
+      UseRemoveLocalStorage('isAuthenticated');
     }
   }, [isAuthenticated]);
 
@@ -54,21 +31,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(true);
     setTimeout(() => {
       const filteredData = data.filter(
-        (el: User) => el.email === email && el.password === password
+        (el: UserProps) => el.email === email && el.password === password,
       );
 
       if (filteredData.length === 0) {
-        setError(true);
+        setError(['Nenhum e-mail cadastrado', 'error', 'ERROR']);
+
         setLoading(false);
         return;
       }
-      const users: User[] = filteredData.map((el: User) => ({
+
+      const user: UserProps[] = filteredData.map((el: UserProps) => ({
         name: el.name,
         email: el.email,
         todo: el.todo,
       }));
-      setUser(users);
+      setUser(user);
       setError(false);
+      console.log(error);
+
       setLoading(false);
       setIsAuthenticated(true);
       return;
@@ -80,17 +61,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setTimeout(() => {
       const validate = data.some((el: { email: string }) => el.email === email);
       if (validate) {
-        console.log("email ja cadastrado");
+        console.log('email ja cadastrado');
         console.log(data);
         setLoading(false);
-
         return;
       }
 
       data.push({ name: name, email: email, password: password, todo: [] });
-      UseSetLocalStorage("data", data);
+      UseSetLocalStorage('data', data);
       setLoading(false);
-      console.log("usuario cadastrado", data);
+      console.log('usuario cadastrado', data);
     }, 1000);
   };
 
@@ -99,9 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, singIn, singUp, logout, data, error, loading }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, singIn, singUp, logout, data, error, loading }}>
       {children}
     </AuthContext.Provider>
   );

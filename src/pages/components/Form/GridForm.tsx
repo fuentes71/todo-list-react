@@ -1,14 +1,11 @@
-import React from "react";
-import { Grid, FormControl } from "@mui/material";
+import React from 'react';
+import { Grid, FormControl } from '@mui/material';
 
-type BoxFormProps = {
-  children: React.ReactNode;
-};
-const GridForm: React.FC<BoxFormProps> = ({ children }) => {
+const GridForm: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
-      <Grid>
-        <FormControl sx={{ m: 2, width: "25ch" }} variant="standard">
+      <Grid item>
+        <FormControl fullWidth sx={{ m: 2 }} variant="standard">
           {children}
         </FormControl>
       </Grid>

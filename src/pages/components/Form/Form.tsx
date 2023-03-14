@@ -1,25 +1,21 @@
-import React from "react";
-import { Container, Grid, Box, Paper } from "@mui/material";
-interface FormProps {
-  maxWidth: "sm" | "lg" | "md" | "xl" | "xs";
-  children: React.ReactNode;
-}
-const Form: React.FC<FormProps> = ({ maxWidth, children }) => {
+import React from 'react';
+import { Grid, Box, Paper } from '@mui/material';
+
+const Form: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <React.Fragment>
-      <Container maxWidth={maxWidth}>
-        <Grid
-          container
-          height="100vh"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box component="form" noValidate autoComplete="off">
-            <Paper style={{ padding: "10px" }}>{children}</Paper>
-          </Box>
-        </Grid>
-      </Container>
-    </React.Fragment>
+    <>
+      <Grid
+        component="form"
+        noValidate
+        autoComplete="off"
+        container
+        height="100vh"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box sx={{ padding: '10px' }}>{children}</Box>
+      </Grid>
+    </>
   );
 };
 

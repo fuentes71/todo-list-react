@@ -1,5 +1,5 @@
 import { LoginForm } from "./Login/LoginForm";
-import { LoginCreate } from "./Login/LoginCreate"
-import { TodoList } from "./TodoList";
+import { LoginCreate } from "./Login/LoginCreate";
+import { Todo } from "./Todo/Todo";
 
-export { LoginForm, LoginCreate, TodoList };
+export { LoginForm, LoginCreate, Todo };

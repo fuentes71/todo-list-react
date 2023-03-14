@@ -1,29 +1,12 @@
-import React from "react";
-import { AuthContext } from "../../../shared/contexts/AuthContext";
+import React from 'react';
+import { AuthContext } from '../../../../shared/contexts/AuthContext';
 
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  FormControl,
-  Input,
-  Grid,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  TextField,
-  Box,
-  OutlinedInput,
-} from "@mui/material";
-import GridForm from "../Form/GridForm";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { InputAdornment, IconButton, TextField } from '@mui/material';
+import GridForm from '../GridForm';
+import { InputPasswordProps } from '../../../../shared/types';
 
-interface InputProps {
-  label: string;
-  helperText?: string;
-  error?: boolean;
-  id: string;
-  onChange: (id: string, value: string) => void;
-}
-
-const InputPassword: React.FC<InputProps> = ({
+const InputPassword: React.FC<InputPasswordProps> = ({
   label,
   id,
   onChange,
@@ -44,7 +27,7 @@ const InputPassword: React.FC<InputProps> = ({
           variant="standard"
           disabled={loading}
           error={error}
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           id={id}
           helperText={helperText}
           onChange={handleChange}
